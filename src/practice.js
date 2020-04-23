@@ -12,12 +12,13 @@ const knexInstance = knex({
 
 /* ----------------------------------------------------------------------------------- */
 
+//to verify we have correctly installed knex & the pg driver (p. 11)
 console.log('knex and driver installed correctly \n');
 
 
 /* ----------------------------------------------------------------------------------- */
 
-//removed //p. 11-12
+//removed //used the toQuery() method which returned a string of the query at its current state for debugging purposes (p. 11-12)
 //removed //const q1 = knexInstance('amazong_products').select('*').toQuery() //=> q1: select * from "amazong_products"
 //removed //const q2 = knexInstance.from('amazong_products').select('*').toQuery() //=> q2: select * from "amazong_products"
 //removed //console.log('q1:', q1)
@@ -28,6 +29,8 @@ console.log('knex and driver installed correctly \n');
 //p. 13-15
 
 /*
+//select the identifier, name, price, and category of a product of interest (p. 14)
+//also use .first() method to only select the first item found (p. 15)
 const qry = knexInstance
    .select('product_id', 'name', 'price', 'category')
    .from('amazong_products')
@@ -38,6 +41,7 @@ const qry = knexInstance
    })
 */
 
+//take a look at the query that this created for us by using .toQuery() method & console.log the return value (p. 15)
 const qry = knexInstance
     .select('product_id', 'name', 'price', 'category')
     .from('amazong_products')
@@ -53,6 +57,7 @@ const qry = knexInstance
 //p. 18 - 19
 //removed //const searchTerm = 'holo'
 
+//to search products that contain a provided search term in its name (case-insensitive)
 function searchByProduceName(searchTerm) {
     knexInstance
    .select('product_id', 'name', 'price', 'category')
@@ -70,6 +75,7 @@ function searchByProduceName(searchTerm) {
 /* ----------------------------------------------------------------------------------- */
 //p. 20
 
+//using limit & offset to paginate the table products (p. 19)
 function paginateProducts(page){
     const productsPerPage = 10
     const offset = productsPerPage * (page - 1)
@@ -90,6 +96,7 @@ function paginateProducts(page){
 /* ----------------------------------------------------------------------------------- */
 //p. 21
 
+//filter products that have images
 function getProductsWithImages() {
     knexInstance
         .select('product_id', 'name', 'price', 'category', 'image')
@@ -107,6 +114,7 @@ function getProductsWithImages() {
 /* ----------------------------------------------------------------------------------- */
 //p. 22
 
+//find the most popular videos
 function mostPopularVideosForDays(days) {
     knexInstance
       .select('video_name', 'region')
@@ -114,7 +122,9 @@ function mostPopularVideosForDays(days) {
       .where(
         'date_viewed',
         '>',
-        knexInstance.raw(`now() - '?? days'::INTERVAL`, days)
+        //we can use raw method to pass in "raw" SQL as a string (p. 23)
+        //we use ?? to tell knex that this is the position in the raw SQL that will contain user input (days)
+        knexInstance.raw(`now() - '?? days'::INTERVAL`, days) 
       )
       .from('whopipe_video_views')
       .groupBy('video_name', 'region')
@@ -145,3 +155,4 @@ knex methods (p. 13):
 https://knexjs.org/#Builder (see sidebar)
 
 */
+
