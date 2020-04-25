@@ -10,7 +10,7 @@ ________________________________________________________________________________
 
 blogful.js  
 articles-services.js  
-articles-services.spec.js
+articles-services.spec.js  
 shopping-list-service.js  
 shopping-list-service.spec.js  
   
