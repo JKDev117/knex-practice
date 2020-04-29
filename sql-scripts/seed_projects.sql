@@ -56,6 +56,85 @@ INSERT INTO employee_project
 
 
 
+-- TEST CODE BELOW -- 
+
+-- ASSIGNMENT 17.18 ----------------------------------------------------------------------------------------------------------------------------------------
+
+-- 1. How many people work in the Sales department?
+SELECT DISTINCT dept_name, COUNT(e.emp_name) as num_Of_Employees
+FROM
+    employee e
+    INNER JOIN
+    department d
+    ON e.department = d.id
+WHERE
+    d.dept_name = 'Sales'
+GROUP BY d.dept_name;
+
+
+-- 2. List the names of all employees assigned to the 'Plan Christmas party' project.
+SELECT
+    p.project_name as project,
+    e.emp_name as employees_assigned
+FROM
+    employee e
+    JOIN
+    employee_project ep
+    ON e.id = ep.emp_id
+    JOIN
+    project p
+    ON ep.project_id = p.id
+WHERE
+    p.project_name = 'Plan christmas party';
+
+
+-- 3. List the names of employees from the Warehouse department that are assigned to the 'Watch paint dry' project.
+SELECT dept_name, project_name as list_of_all_projects, emp_name as employee_assigned
+FROM
+    department d
+    JOIN
+    employee e
+    ON e.department = d.id
+    JOIN
+    employee_project ep
+    ON e.id = ep.emp_id
+    JOIN
+    project p
+    ON ep.project_id = p.id
+WHERE dept_name='Warehouse';
+
+-- 4. Which projects are the Sales department employees assigned to?
+SELECT dept_name, emp_name, project_name
+FROM
+    department d
+    JOIN
+    employee e
+    ON e.department = d.id
+    JOIN
+    employee_project ep
+    ON e.id = ep.emp_id
+    JOIN
+    project p
+    ON ep.project_id = p.id
+WHERE dept_name='Sales';
+
+-- 5. List only the managers that are assigned to the 'Watch paint dry' project.
+
+SELECT project_name, emp_name as manager, dept_name
+FROM
+    department d
+    JOIN
+    employee e
+    ON e.id = d.manager
+    JOIN
+    employee_project ep
+    ON e.id = ep.emp_id
+    JOIN
+    project p
+    ON ep.project_id = p.id
+WHERE project_name='Watch paint dry';
+
+
 
 
 
