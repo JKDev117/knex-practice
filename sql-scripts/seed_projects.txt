@@ -1,0 +1,184 @@
+-- THIS IS A COMMENT IN SQL
+-- TEST CODES FOR seed_projects.sql [Copy & paste the code you want to test into seed_projects.sql to test]
+
+-- TEST CODE ----------------------------------------------------------------------------------------------------------------------------------------
+-- If we are interested in departments and relevant managers we can join the department table with the employee table using the manager relationship.
+SELECT * FROM department JOIN employee ON department.manager = employee.id;
+
+
+-- TEST CODE ----------------------------------------------------------------------------------------------------------------------------------------
+-- It is good style to explicitly list the column names in a SELECT statement mainly because we reduce the number of columns that need to be processed by the system to satisfy the query. 
+-- We do not need the department id from the employee table. It is also recommended that all column names be qualified with the table name, that is, employee.salary rather than just salary.
+SELECT
+  department.id,
+  department.dept_name,
+  employee.emp_name,
+  employee.phone,
+  employee.title,
+  employee.salary
+FROM department JOIN employee ON department.manager = employee.id;
+
+
+-- TEST CODE ----------------------------------------------------------------------------------------------------------------------------------------
+-- While the code above is recommended, it is more typing. We can use table aliases to help reduce the number of keystrokes to type such queries. 
+-- The table alias only exists within the query itself. To create an alias, simply specify the new alias in the FROM clause.
+SELECT
+  d.id,
+  d.dept_name,
+  e.emp_name,
+  e.phone,
+  e.title,
+  e.salary
+FROM
+  department d
+  JOIN
+  employee e
+  ON d.manager = e.id;
+
+
+
+-- TEST CODE ----------------------------------------------------------------------------------------------------------------------------------------
+-- It is also possible to alias the column names to make the result a bit more readable where that is needed. For instance:
+SELECT
+  d.id as department_id,
+  d.dept_name as department,
+  e.emp_name as Full_Name,
+  e.phone,
+  e.title,
+  e.salary
+FROM
+  department d
+  JOIN
+  employee e
+  ON d.manager = e.id;
+
+
+
+-- TEST CODE ----------------------------------------------------------------------------------------------------------------------------------------
+-- What happens if there is a department with no manager? We can check what happens by creating a new department without a manager.
+INSERT INTO department (dept_name) VALUES ('Marketing');
+SELECT
+  d.id,
+  d.dept_name,
+  d.manager
+FROM department d;
+
+
+-- list all departments and the names of the managers.
+SELECT
+  d.id,
+  d.dept_name as department,
+  e.emp_name as Manager_Name
+FROM
+  department d
+  JOIN
+  employee e
+  ON
+    d.manager = e.id;
+
+-- The default type of JOIN is known as INNER JOIN. INNER JOIN return all rows where the two columns in the join condition match. The above query could be written as:
+SELECT
+  d.id,
+  d.dept_name as department,
+  e.emp_name as Manager_Name
+FROM
+  department d
+  INNER JOIN
+  employee e
+  ON
+    d.manager = e.id;
+
+
+-- TEST CODE ----------------------------------------------------------------------------------------------------------------------------------------
+-- List the names, salaries, and departments of all employees.
+SELECT
+  e.emp_name as Full_Name,
+  e.salary as Salary,
+  d.dept_name as Department
+FROM
+  employee e
+  INNER JOIN
+  department d
+  ON e.department = d.id;
+
+-- List the names and salaries of all employees in the Sales department. 
+SELECT
+  e.emp_name as Full_Name,
+  e.salary as Salary,
+  d.dept_name as Department
+FROM
+  employee e
+  INNER JOIN
+  department d
+  ON e.department = d.id
+WHERE
+  d.dept_name = 'Sales';  
+
+
+-- List the employee name and project name that the employee is assigned to.
+SELECT
+  e.emp_name as Full_Name,
+  p.project_name as project
+FROM
+  employee e
+  JOIN
+  employee_project ep
+  ON e.id = ep.emp_id
+  JOIN
+  project p
+  ON ep.project_id = p.id;  
+
+
+-- TEST CODE ----------------------------------------------------------------------------------------------------------------------------------------
+-- Let's get back to the case of the missing manager.  
+INSERT INTO department (dept_name) VALUES ('Marketing');
+
+-- Suppose that you need a list of all departments and the corresponding manager name.
+-- If a department does not have a manager then just put a null in that column. We know, from above, that the inner join does not satisfy this query.
+SELECT
+  d.id,
+  d.dept_name as department,
+  e.emp_name as Manager_Name
+FROM
+  department d
+  INNER JOIN
+  employee e
+  ON
+    d.manager = e.id;
+
+-- A LEFT JOIN brings back all rows on the LEFT side of a JOIN even if it does not match any rows on the right. 
+-- If no matches are found the right side columns are null. We can use the same query but change the JOIN type to LEFT JOIN.
+-- This time all departments are returned
+SELECT
+  d.id,
+  d.dept_name as department,
+  e.emp_name as Manager_Name
+FROM
+  department d
+  LEFT JOIN
+  employee e
+  ON
+    d.manager = e.id;
+
+
+-- TEST CODE ----------------------------------------------------------------------------------------------------------------------------------------
+-- List all employee names and the name of the department that they manage.
+-- We know that an INNER JOIN will only bring back employees that actually manage departments. Let's use the same query from above with a RIGHT JOIN.
+-- RIGHT JOIN will bring back all rows on the right of a JOIN whether it matches a row on the left or not. In cases where it does not match left columns are null.
+
+SELECT
+  e.emp_name as Manager_Name,
+  d.dept_name as department
+FROM
+  department d
+  RIGHT JOIN
+  employee e
+  ON
+    d.manager = e.id;
+
+
+
+
+
+
+
